@@ -3,10 +3,9 @@ I made this repository focused on making a REST API for the Time-Management Web 
 using: Node, Express and Mongo.
 
 ## Initialization
-After download master branch remember to install node modules (npm install) inside
-the proyect.
+After download master branch, remember to install node modules inside the proyect.
 
-Initialize the proyect using npm run dev.
+Initialize it using npm run dev.
 
 Server runs on port 4000.
 
