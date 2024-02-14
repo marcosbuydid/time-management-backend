@@ -1,6 +1,8 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const { generateJWT } = require('../utils/jwt');
+
 
 
 const createUser = async (req, res = response) => {
@@ -13,7 +15,7 @@ const createUser = async (req, res = response) => {
         if (user !== null) {
             return res.status(400).json({
                 ok: false,
-                msg: 'User already defined with this email'
+                msg: 'Email already in use'
             });
         }
 
@@ -26,11 +28,16 @@ const createUser = async (req, res = response) => {
         //save user on database
         await user.save();
 
+        //generate JWT
+        const token = await generateJWT(user.id, user.name);
+
         res.status(201).json({
             ok: true,
             uid: user.id,
-            name: user.name
+            name: user.name,
+            token: token
         });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -65,11 +72,13 @@ const login = async (req, res = response) => {
         }
 
         //generate JWT
+        const token = await generateJWT(user.id, user.name);
 
         res.json({
             ok: true,
             uid: user.id,
-            name: user.name
+            name: user.name,
+            token: token
         })
 
     } catch (error) {
@@ -81,10 +90,15 @@ const login = async (req, res = response) => {
     }
 }
 
-const refreshToken = (req, res = response) => {
+const refreshToken = async (req, res = response) => {
+
+    const { uid, name } = req;
+
+    const token = await generateJWT(uid, name);
+
     res.json({
         ok: true,
-        msg: 'renew'
+        token: token
     })
 }
 

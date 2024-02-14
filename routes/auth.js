@@ -6,9 +6,10 @@ const router = Router();
 
 const { createUser, login, refreshToken } = require('../controllers/auth');
 const { fieldValidator } = require('../middlewares/field-validator');
+const { validateJWT } = require('../middlewares/jwt-validator');
 
 router.post(
-    '/new',
+    '/signup',
     [ //middleware
         check('name', 'Name is required').not().isEmpty(),
         check('email', 'Email is required').isEmail(),
@@ -19,7 +20,7 @@ router.post(
 );
 
 router.post(
-    '/',
+    '/login',
     [
         check('email', 'Email is required').isEmail(),
         check('password', 'Password must have at least 8 chars').isLength({ min: 8 }),
@@ -29,7 +30,8 @@ router.post(
 );
 
 router.get(
-    '/renew',
+    '/refresh',
+    validateJWT,
     refreshToken
 );
 
