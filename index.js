@@ -1,6 +1,7 @@
 //same as import from
 const express = require('express');
 const { dbConnection } = require('./database/config');
+const cors = require('cors');
 require('dotenv').config();
 
 //express server creation
@@ -8,6 +9,9 @@ const app = express();
 
 //database
 dbConnection();
+
+//CORS
+app.use(cors());
 
 //public directory
 app.use(express.static('public'));
