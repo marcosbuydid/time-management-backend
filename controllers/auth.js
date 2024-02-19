@@ -93,13 +93,25 @@ const login = async (req, res = response) => {
 const refreshToken = async (req, res = response) => {
 
     const { uid, name } = req;
+    const { email } = req.body;
 
-    const token = await generateJWT(uid, name);
+    try {
+        const token = await generateJWT(uid, name);
+        const user = await User.findOne({ email });
 
-    res.json({
-        ok: true,
-        token: token
-    })
+        res.json({
+            ok: true,
+            token: token,
+            uid: user.id,
+            user: user.name
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Contact database administrator'
+        });
+    }
 }
 
 module.exports = {
